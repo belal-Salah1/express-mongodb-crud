@@ -1,10 +1,14 @@
 const Course = require("../models/model.schema");
 const {validationResult} = require('express-validator');
-const httpStatusText = require('../utilites/httpStatusText');
+const httpStatusText = require('../utilites/statusCodeText');
 
 const getAllCourses = async (req, res) => {
+  const query = req.query
+  const limit = query.limit || 2;
+  const page = query.page  || 1;
+  const skip = (page - 1) * limit;
   try {
-    const courses = await Course.find();
+    const courses = await Course.find({},{"__v":false }).limit(limit).skip(skip) ;
     if (!courses) {
       res.status(404).json({status:httpStatusText.FAIL , data : {courses:null}});
     }
