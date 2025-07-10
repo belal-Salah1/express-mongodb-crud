@@ -8,7 +8,8 @@ const getAllCourses = async (req, res) => {
   const page = query.page  || 1;
   const skip = (page - 1) * limit;
   try {
-    const courses = await Course.find({},{"__v":false }).limit(limit).skip(skip) ;
+    // const courses = await Course.find({},{"__v":false }).limit(limit).skip(skip) ;
+     const courses = await Course.find({},{"__v":false }) ;
     if (!courses) {
       res.status(404).json({status:httpStatusText.FAIL , data : {courses:null}});
     }
