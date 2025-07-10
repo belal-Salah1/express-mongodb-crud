@@ -1,5 +1,6 @@
 const Course = require("../models/model.schema");
-const {validationResult} = require('express-validator')
+const {validationResult} = require('express-validator');
+const httpStatusText = require('../utilites/httpStatusText');
 
 const getAllCourses = async (req, res) => {
   try {
