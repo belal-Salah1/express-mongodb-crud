@@ -5,11 +5,11 @@ const getAllCourses = async (req, res) => {
   try {
     const courses = await Course.find();
     if (!courses) {
-      res.status(400).json({ msg: "Can't fetch the courses" });
+      res.status(404).json({status:httpStatusText.FAIL , data : {courses:null}});
     }
-    res.status(200).json(courses);
+    res.status(200).json({status:httpStatusText.SUCCESS , data : {Courses : courses}});
   } catch (err) {
-    console.log(err);
+    return res.status(400).json({status:httpStatusText.ERROR , message :err.message});
   }
 };
 
@@ -17,11 +17,11 @@ const getSingleCourse = async (req, res) => {
   try {
     const course = await Course.findById(req.params.id);
     if (!course) {
-      res.status(400).json({ msg: "Can't find the course" });
+      res.status(400).json({status:httpStatusText.FAIL , data : {courses:null}});
     }
-    res.status(200).json(course);
+    res.status(200).json({status:httpStatusText.SUCCESS , data : {Course : course}});
   } catch (err) {
-    console.log(err);
+    return res.status(400).json({status:httpStatusText.ERROR , message :err.message});
   }
 };
 
@@ -30,13 +30,13 @@ const addCourse = async (req, res) => {
     const NewCourse = await new Course(req.body);
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      res.status(400).json(errors.array());
+      res.status(400).json({status:httpStatusText.FAIL , errors:errors.array()});
       return;
     }
     NewCourse.save();
-    res.status(201).json({ msg: "course created successfully" });
+    res.status(201).json({status:httpStatusText.SUCCESS , data : {Course : NewCourse}});
   } catch (err) {
-    console.log(err);
+    return res.status(400).json({status:httpStatusText.ERROR , message :err.message});
   }
 };
 
@@ -47,18 +47,18 @@ const updateCourse = async (req, res) => {
       { $set: req.body },
       { new: true }
     );
-    res.status(200).json(course);
+    res.status(200).json({status:httpStatusText.SUCCESS , data : {Course : course}});
   } catch (err) {
-    console.log(err);
+    return res.status(400).json({status:httpStatusText.ERROR , message :err.message});
   }
 };
 
 const deleteCourse = async (req, res) => {
   try {
     await Course.findByIdAndDelete(req.params.id);
-    res.status(200).json({ msg: "course deleted successfully" });
+    res.status(200).json({status:httpStatusText.SUCCESS , data : {msg: "course deleted successfully" }});
   } catch (err) {
-    console.log(err);
+    return res.status(400).json({status:httpStatusText.ERROR , message :err.message});
   }
 };
 
